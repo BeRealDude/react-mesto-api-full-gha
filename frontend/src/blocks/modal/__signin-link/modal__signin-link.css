@@ -1,0 +1,18 @@
+.modal__signin-link{
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    color: white;
+    text-align: center;
+    padding-left: 2%;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.modal__signin-link:hover{
+    transition: 0.3s;
+    opacity: 0.6;
+}

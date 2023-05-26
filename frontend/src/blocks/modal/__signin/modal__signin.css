@@ -1,0 +1,13 @@
+.modal__signin{
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    color: white;
+    text-align: center;
+    grid-row: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

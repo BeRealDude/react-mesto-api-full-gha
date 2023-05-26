@@ -1,0 +1,11 @@
+.header__email{
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    color: white;
+    margin: 0;
+    align-self: self-end;
+    margin-right: 13%;
+}

@@ -1,0 +1,21 @@
+.formModal__submit-btn{
+    min-width: 358px;
+    min-height: 50px;
+    background: white;
+    border-radius: 2px;
+    font-family: 'Inter', Arial, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    text-align: center;
+    color: black;
+    padding: 0;
+    cursor: pointer;
+    border: none;
+}
+
+.formModal__submit-btn:hover{
+    transition: 0.3s;
+    opacity: 0.6;
+}
