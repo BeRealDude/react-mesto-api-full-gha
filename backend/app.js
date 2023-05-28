@@ -1,11 +1,12 @@
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const cors = require('cors');
 const { errors } = require('celebrate');
 const express = require('express');
 const mongoose = require('mongoose');
 const PageNotFound = require('./error/page-not-found');
 
-// const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { errorCenter } = require('./middlewares/error-center');
 
 const routerSignup = require('./routes/signup');
@@ -25,11 +26,13 @@ const limiter = rateLimit({
   message: 'Слишком много запросов с этого IP-адреса',
 });
 
+app.use(cors());
+
 app.use(helmet());
 
 mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
-// app.use(requestLogger);
+app.use(requestLogger);
 
 app.use(limiter);
 
@@ -43,7 +46,7 @@ app.use((req, res, next) => {
   next(new PageNotFound('Страница не найдена'));
 });
 
-// app.use(errorLogger);
+app.use(errorLogger);
 
 app.use(errors());
 app.use(errorCenter);

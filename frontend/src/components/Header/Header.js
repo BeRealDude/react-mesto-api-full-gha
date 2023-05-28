@@ -22,17 +22,17 @@ function Header(props) {
         />
 
         <Route
-          path="/sign-in"
+          path="/signin"
           element={
-            <Link to="/sign-up" className="header__signOut">
+            <Link to="/signup" className="header__signOut">
               Регистрация
             </Link>
           }
         />
         <Route
-          path="/sign-up"
+          path="/signup"
           element={
-            <Link to="/sign-in" className="header__signOut">
+            <Link to="/signin" className="header__signOut">
               Войти
             </Link>
           }

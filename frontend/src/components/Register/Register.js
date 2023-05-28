@@ -71,7 +71,7 @@ function Register(props) {
         </span>
         <div className="modal__signin">
           <p>Уже зарегистрированы?</p>
-          <Link to="/sign-in" className="modal__signin-link">
+          <Link to="/signin" className="modal__signin-link">
             Войти
           </Link>
         </div>

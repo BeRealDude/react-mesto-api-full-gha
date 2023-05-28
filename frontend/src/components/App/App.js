@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import Header from "../Header/Header";
 import Main from "../Main/Main";
@@ -23,7 +23,8 @@ function App() {
   const [isRegistration, setRegistration] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [infoUser, setInfoUser] = useState({
-    email: "",
+    _id: '',
+    email: '',
   });
 
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
@@ -34,29 +35,44 @@ function App() {
 
   const [isInfoTooltip, setIsInfoTooltip] = useState(false);
 
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState({
+    _id: '',
+    email: '',
+    name: '',
+    about: '',
+    avatar: ''
+  });
+
   const [cards, setCards] = useState([]);
 
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
 
-  function tokenCheck() {
+  const tokenCheck = useCallback(() => {
     const jwt = localStorage.getItem("jwt");
     if (jwt) {
       auth
         .getContent(jwt)
         .then((res) => {
+          const { _id, email } = res;
+          const infoUser = {
+            _id,
+            email,
+          };
+          setInfoUser(infoUser);
           setLoggedIn(true);
-          setInfoUser({
-            email: res.data.email,
-          });
           navigate("/", { replace: true });
         })
         .catch((err) => {
-          console.log("Ошибка", err);
+          console.log("Ошибка", err.name);
+          // localStorage.removeItem("jwt");
         });
     }
-  }
+  }, [navigate]);
+
+  useEffect(() => {
+    tokenCheck();
+  }, [tokenCheck]);
 
   useEffect(() => {
     if (loggedIn) {
@@ -71,9 +87,47 @@ function App() {
     }
   }, [loggedIn]);
 
-  useEffect(() => {
-    tokenCheck();
-  }, []);
+  function handleRegister(info) {
+    auth
+      .register(info)
+      .then(() => {
+        setRegistration(true);
+        setMessage("Вы успешно зарегистрировались!");
+        handleOpenInfoTooltip();
+        navigate("/signin");
+      })
+      .catch(() => {
+        setMessage("Что-то пошло не так! Попробуйте ещё раз.");
+        setRegistration(false);
+        handleOpenInfoTooltip();
+        console.log("тултип ошибка");
+      });
+  }
+
+  function handleLogin(info) {
+    console.log('handleLogin1')
+    const { email, password } = info;
+    auth
+      .authorize(email, password)
+      .then((jwt) => {
+        console.log('jwt', jwt)
+        if (jwt) {
+          setLoggedIn(true);
+          setInfoUser({
+            email,
+            password,
+          });
+          console.log('handleLogin')
+          navigate("/", { replace: true });
+        }
+      })
+      .catch(() => {
+        setMessage("Что-то пошло не так! Попробуйте ещё раз.");
+        setRegistration(false);
+        handleOpenInfoTooltip();
+        console.log("тултип ошибка");
+      });
+  }
 
   function handleOpenInfoTooltip() {
     setIsInfoTooltip(true);
@@ -110,7 +164,7 @@ function App() {
 
   function handleSignOut() {
     localStorage.removeItem("jwt");
-    navigate("/sign-up");
+    navigate("/signup");
     setLoggedIn(false);
     setInfoUser({ email: "" });
   }
@@ -175,43 +229,6 @@ function App() {
       });
   }
 
-  function handleRegister(info) {
-    auth
-      .register(info)
-      .then(() => {
-        setRegistration(true);
-        setMessage("Вы успешно зарегистрировались!");
-        handleOpenInfoTooltip();
-        navigate("/sign-in");
-      })
-      .catch(() => {
-        setMessage("Что-то пошло не так! Попробуйте ещё раз.");
-        setRegistration(false);
-        handleOpenInfoTooltip();
-        console.log("тултип ошибка");
-      });
-  }
-
-  function handleLogin(info) {
-    auth
-      .authorize(info)
-      .then((jwt) => {
-        if (jwt) {
-          setLoggedIn(true);
-          setInfoUser({
-            email: info.email,
-          });
-          navigate("/", { replace: true });
-        }
-      })
-      .catch(() => {
-        setMessage("Что-то пошло не так! Попробуйте ещё раз.");
-        setRegistration(false);
-        handleOpenInfoTooltip();
-        console.log("тултип ошибка");
-      });
-  }
-
   return (
     <>
       <CurrentUserContext.Provider value={currentUser}>
@@ -223,7 +240,7 @@ function App() {
 
         <Routes>
           <Route
-            path="/sign-up"
+            path="/signup"
             element={
               <Register
                 onRegister={handleRegister}
@@ -233,7 +250,7 @@ function App() {
             }
           />
           <Route
-            path="/sign-in"
+            path="/signin"
             element={<Login onLogin={handleLogin} onError={message} />}
           />
           <Route
@@ -257,7 +274,7 @@ function App() {
           <Route
             path="*"
             element={
-              loggedIn ? <Navigate to="/" /> : <Navigate to="/sign-up" />
+              loggedIn ? <Navigate to="/" /> : <Navigate to="/signup" />
             }
           />
         </Routes>

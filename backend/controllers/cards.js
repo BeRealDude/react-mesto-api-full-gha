@@ -5,8 +5,9 @@ const NoAccess = require('../error/no-access');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((card) => res.send({ data: card }))
-    .catch((err) => next(err));
+    .populate(['owner', 'likes'])
+    .then((cards) => res.send(cards))
+    .catch(next);
 };
 
 module.exports.createCard = (req, res, next) => {
@@ -14,7 +15,12 @@ module.exports.createCard = (req, res, next) => {
   const { _id: idUser } = req.user;
 
   Card.create({ name, link, owner: idUser })
-    .then((card) => res.send({ data: card }))
+    .then((card) => {
+      card
+        .populate('owner')
+        .then(() => res.status(201).send(card))
+        .catch(next);
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new IncorrectData('Переданы некорректные данные при создании карточки'));
@@ -53,8 +59,9 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: idUser } },
     { new: true },
   )
+    .populate(['owner', 'likes'])
     .then((card) => {
-      if (card) return res.send({ data: card });
+      if (card) return res.send(card);
       throw new PageNotFound('Передан несуществующий id карточки');
     })
     .catch((err) => {
@@ -74,8 +81,9 @@ module.exports.dislikeCard = (req, res, next) => {
     { $pull: { likes: idUser } },
     { new: true },
   )
+    .populate(['owner', 'likes'])
     .then((card) => {
-      if (card) return res.send({ data: card });
+      if (card) return res.send(card);
       throw new PageNotFound('Передан несуществующий id карточки');
     })
     .catch((err) => {

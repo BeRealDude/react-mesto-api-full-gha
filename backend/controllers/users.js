@@ -7,14 +7,14 @@ const IncorrectData = require('../error/incorrect-data');
 
 module.exports.getUser = (req, res, next) => {
   User.find({})
-    .then((user) => res.send({ data: user }))
+    .then((users) => res.send(users))
     .catch((err) => next(err));
 };
 
 module.exports.getUserId = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
-      if (user) return res.send({ data: user });
+      if (user) return res.send(user);
       throw new PageNotFound('Пользователь по указанному id не найден');
     })
     .catch((err) => {
@@ -30,7 +30,7 @@ module.exports.thisUser = (req, res, next) => {
   const { _id: idUser } = req.user;
   User.findById(idUser)
     .then((user) => {
-      if (user) return res.status(200).send({ user });
+      if (user) return res.status(200).send(user);
       throw new PageNotFound('Пользователь по указанному id не найден');
     })
     .catch((err) => {
@@ -43,11 +43,8 @@ module.exports.login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'super-strong-secret');
-      res.cookie('jwt', token, {
-        maxAge: 3600000 * 24 * 7,
-        httpOnly: true,
-      }).status(200).send({ message: 'Авторизация прошла успешна' });
+      const token = jwt.sign({ _id: user._id }, 'asdf', { expiresIn: '7d' });
+      res.status(200).send({ token, message: 'Авторизация прошла успешна' });
     })
     .catch((err) => {
       next(err);
@@ -83,7 +80,7 @@ module.exports.updateUser = (req, res, next) => {
 
   User.findByIdAndUpdate(idUser, { name, about }, { new: true, runValidators: true })
     .then((user) => {
-      if (user) return res.send({ data: user });
+      if (user) return res.send(user);
       throw new PageNotFound('Пользователь по указанному id не найден');
     })
     .catch((err) => {
@@ -97,7 +94,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
 
   User.findByIdAndUpdate(idUser, { avatar }, { new: true, runValidators: true })
     .then((user) => {
-      if (user) return res.send({ data: user });
+      if (user) return res.send(user);
       throw new PageNotFound('Пользователь по указанному id не найден');
     })
     .catch((err) => {
