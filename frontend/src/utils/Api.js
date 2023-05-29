@@ -1,6 +1,6 @@
 class Api {
   constructor() {
-    this._baseUrl = 'http://localhost:3001';
+    this._baseUrl = 'https://api.nvs.mesto.nomoredomains.rocks';
   }
 
   _request(url, options) {
