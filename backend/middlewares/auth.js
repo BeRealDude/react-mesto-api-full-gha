@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { NODE_ENV, SECRET_SIGNING_KEY } = require('../utils/constants');
 const IncorrectToken = require('../error/incorrect-token');
 
 module.exports = (req, res, next) => {
@@ -12,7 +13,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, 'asdf');
+    payload = jwt.verify(token, NODE_ENV === 'production' ? SECRET_SIGNING_KEY : 'asdf');
   } catch (err) {
     return next(new IncorrectToken('Необходима авторизация'));
   }

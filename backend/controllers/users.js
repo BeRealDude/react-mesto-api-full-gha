@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const { NODE_ENV, SECRET_SIGNING_KEY } = require('../utils/constants');
 const User = require('../models/user');
 const AccountUsed = require('../error/account-used');
 const PageNotFound = require('../error/page-not-found');
@@ -43,7 +44,7 @@ module.exports.login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'asdf', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? SECRET_SIGNING_KEY : 'asdf', { expiresIn: '7d' });
       res.status(200).send({ token, message: 'Авторизация прошла успешна' });
     })
     .catch((err) => {
