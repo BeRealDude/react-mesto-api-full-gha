@@ -36,6 +36,12 @@ app.use(requestLogger);
 
 app.use(limiter);
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 app.use('/', routerSignup);
 app.use('/', routerSignin);
 
