@@ -8,8 +8,8 @@
 
 ## Ссылки на проект
 
-IP-адрес x.x.x.x
+IP-адрес 84.201.178.17
 
-Frontend https://...
+Frontend https://nvs.mesto.nomoredomains.rocks
 
-Backend https://...
+Backend https://api.nvs.mesto.nomoredomains.rocks
