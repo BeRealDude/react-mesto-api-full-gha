@@ -15,7 +15,7 @@ const routerSignin = require('./routes/signin');
 const routerUser = require('./routes/users');
 const routerCard = require('./routes/cards');
 
-const { PORT = 3001 } = process.env;
+const { PORT = 3000 } = process.env;
 
 const app = express();
 app.use(express.json());
