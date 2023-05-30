@@ -19,7 +19,7 @@ module.exports.getUserId = (req, res, next) => {
       throw new PageNotFound('Пользователь по указанному id не найден');
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err instanceof Error) {
         next(new IncorrectData('Переданы некорректные данные'));
       } else {
         next(err);
@@ -67,7 +67,7 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.code === 11000) { // Нет-нет, всё хорошо. Заработало после удаления коллекций в базе
         next(new AccountUsed('Аккаунт с этой почтой уже существует'));
-      } if (err.name === 'ValidationError') {
+      } if (err instanceof Error) {
         next(new IncorrectData('Переданы некорректные данные при создании пользователя'));
       } else {
         next(err);
