@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { NODE_ENV, SECRET_SIGNING_KEY } = require('../utils/constants');
+const { NODE_ENV, SECRET_SIGNING_KEY } = require('../config');
 const User = require('../models/user');
 const AccountUsed = require('../error/account-used');
 const PageNotFound = require('../error/page-not-found');

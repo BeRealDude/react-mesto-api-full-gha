@@ -17,7 +17,7 @@ const routerSignin = require('./routes/signin');
 const routerUser = require('./routes/users');
 const routerCard = require('./routes/cards');
 
-const { PORT = 3000 } = process.env;
+const { PORT, DB_ADDRESS } = require('./config');
 
 const app = express();
 app.use(express.json());
@@ -32,7 +32,7 @@ app.use(cors());
 
 app.use(helmet());
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
+mongoose.connect(DB_ADDRESS);
 
 app.use(requestLogger);
 
