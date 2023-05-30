@@ -8,7 +8,7 @@
 
 ## Ссылки на проект
 
-IP-адрес 84.201.178.17
+IP 84.201.178.17
 
 Frontend https://nvs.mesto.nomoredomains.rocks
 
