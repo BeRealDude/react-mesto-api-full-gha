@@ -6,16 +6,11 @@ const cors = require('cors');
 const { errors } = require('celebrate');
 const express = require('express');
 const mongoose = require('mongoose');
-const PageNotFound = require('./error/page-not-found');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { errorCenter } = require('./middlewares/error-center');
 
-const routerSignup = require('./routes/signup');
-const routerSignin = require('./routes/signin');
-
-const routerUser = require('./routes/users');
-const routerCard = require('./routes/cards');
+const routes = require('./routes');
 
 const { PORT, DB_ADDRESS } = require('./config');
 
@@ -38,21 +33,7 @@ app.use(requestLogger);
 
 app.use(limiter);
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
-
-app.use('/', routerSignup);
-app.use('/', routerSignin);
-
-app.use('/users', routerUser);
-app.use('/cards', routerCard);
-
-app.use((req, res, next) => {
-  next(new PageNotFound('Страница не найдена'));
-});
+app.use(routes);
 
 app.use(errorLogger);
 
