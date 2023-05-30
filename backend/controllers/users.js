@@ -65,7 +65,7 @@ module.exports.createUser = (req, res, next) => {
       res.status(201).send({ email: user.email, _id: user._id });
     })
     .catch((err) => {
-      if (err.code === 11000) { // Не обрабатывает ошибку, понять почему
+      if (err.code === 11000) { // Нет-нет, всё хорошо. Заработало после удаления коллекций в базе
         next(new AccountUsed('Аккаунт с этой почтой уже существует'));
       } if (err.name === 'ValidationError') {
         next(new IncorrectData('Переданы некорректные данные при создании пользователя'));
